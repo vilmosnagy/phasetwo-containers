@@ -66,6 +66,7 @@ jobs:
           provenance: true
           build-args: |
             GIT_COMMIT=${{ env.GIT_COMMIT }}
+            BUILD_TAG=${{ env.VERSION_TAG }}
           build-contexts: |
             keycloak=${{ steps.keycloak.outputs.context-path }}
           tags: |

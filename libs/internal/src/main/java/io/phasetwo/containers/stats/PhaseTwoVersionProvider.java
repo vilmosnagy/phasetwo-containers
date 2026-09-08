@@ -35,6 +35,14 @@ public class PhaseTwoVersionProvider
     return Banner.getBanner();
   }
 
+  // Set as a plain runtime ENV var (not baked in at compile time via
+  // fizzed-versionizer like COMMIT/TIMESTAMP) because it's only known to CI
+  // after the image build starts (see release.yml's VERSION_TAG). Only the
+  // release pipeline passes BUILD_TAG through; PR/verify builds and any
+  // non-Docker run (local `mvn`, tests) never set it, so they report
+  // "untagged" instead of a stale or misleading version string.
+  private static final String UNTAGGED = "untagged";
+
   @Override
   public Map<String, String> getVersion() {
     Map<String, String> v = Maps.newHashMap();
@@ -42,6 +50,7 @@ public class PhaseTwoVersionProvider
     v.put("vendor", Version.getVendor());
     v.put("commit", Version.getCommit());
     v.put("timestamp", Version.getTimestamp());
+    v.put("buildTag", System.getenv().getOrDefault("BUILD_TAG", UNTAGGED));
     return v;
   }
 
