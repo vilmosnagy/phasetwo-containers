@@ -168,6 +168,13 @@ LABEL org.opencontainers.image.title="phasetwo-keycloak" \
       org.opencontainers.image.licenses="Elastic-2.0" \
       org.opencontainers.image.vendor="Phase Two, Inc."
 
+# The full release tag (eg. 26.6.4.1788529342), surfaced at runtime via
+# PhaseTwoVersionProvider's operationalInfo. Only release.yml passes this
+# build-arg (it's the only workflow that computes VERSION_TAG); PR builds,
+# local `docker build`, and non-Docker runs keep the "untagged" default.
+ARG BUILD_TAG=untagged
+ENV BUILD_TAG=${BUILD_TAG}
+
 # Dedicated non-root identity for the running process. UID/GID 2000 avoids
 # collisions with the UID 1000 baked into many base images and lines up with
 # the article's reference numbers; overridable at build time via --build-arg
